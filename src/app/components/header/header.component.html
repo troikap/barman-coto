@@ -1,0 +1,7 @@
+<header class="header">
+  <h1 class="header-title">Cocteles</h1>
+  <div class="header-actions">
+    <button class="header-button" [class.active]="!showOnlyFavorites" (click)="onShowAll()">Ver todos</button>
+    <button class="header-button" [class.active]="showOnlyFavorites" (click)="onShowFavorites()">Ver favoritos</button>
+  </div>
+</header>

@@ -1,0 +1,14 @@
+@if (cocktail) {
+  <div class="cocktail-card">
+    <div class="favorite-icon" (click)="toggleFavorite()">
+      <span [class.favorite]="isFavorite$ | async">★</span>
+    </div>
+    <img [src]="cocktail.strDrinkThumb" [alt]="cocktail.strDrink">
+    <div class="cocktail-card-info">
+      <h3>{{ cocktail.strDrink }}</h3>
+      <div class="ingredients">
+        <app-ingredients-list [cocktail]="cocktail"></app-ingredients-list>
+      </div>
+    </div>
+  </div>
+}
