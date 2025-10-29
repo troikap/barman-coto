@@ -1,0 +1,37 @@
+<app-header
+  [showOnlyFavorites]="showOnlyFavorites"
+  (showAll)="toggleShowFavorites(false)"
+  (showFavorites)="toggleShowFavorites(true)"
+></app-header>
+
+<div class="view-toggle">
+  <button (click)="toggleView(true)" [class.active]="isGridView">▦</button>
+  <button (click)="toggleView(false)" [class.active]="!isGridView">☰</button>
+</div>
+
+<div
+  [class.cocktail-list]="isGridView"
+  [class.cocktail-list-view]="!isGridView"
+  infinite-scroll
+  [infiniteScrollDisabled]="showOnlyFavorites"
+  [infiniteScrollDistance]="2"
+  [infiniteScrollThrottle]="50"
+  (scrolled)="onScroll()">
+  @if (showOnlyFavorites) {
+    @for (cocktail of (favoriteCocktails$ | async); track cocktail.idDrink) {
+      @if (isGridView) {
+        <app-cocktail-card [cocktail]="cocktail"></app-cocktail-card>
+      } @else {
+        <app-cocktail-list-item [cocktail]="cocktail"></app-cocktail-list-item>
+      }
+    }
+  } @else {
+    @for (cocktail of cocktails; track cocktail.idDrink) {
+      @if (isGridView) {
+        <app-cocktail-card [cocktail]="cocktail"></app-cocktail-card>
+      } @else {
+        <app-cocktail-list-item [cocktail]="cocktail"></app-cocktail-list-item>
+      }
+    }
+  }
+</div>

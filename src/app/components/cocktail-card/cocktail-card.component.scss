@@ -1,0 +1,68 @@
+:host {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  background-color: #ffffff;
+
+  .cocktail-card {
+    img {
+      width: 100%;
+      height: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .cocktail-card-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 16px;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+
+      h3 {
+        margin: 0;
+        font-size: 1.5rem;
+      }
+
+      .ingredients {
+        margin-top: 10px;
+      }
+    }
+
+    &:hover {
+      img {
+        transform: scale(1.1);
+      }
+
+      .cocktail-card-info {
+        transform: translateY(0);
+      }
+    }
+
+    .favorite-icon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 1;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+
+      span {
+        color: white;
+        text-shadow: 0 0 5px white, 0 0 5px white, 0 0 5px white, 0 0 5px white;
+      }
+
+      span.favorite {
+        color: yellow;
+        text-shadow: 0 0 5px black, 0 0 5px black, 0 0 5px black, 0 0 5px black;
+      }
+    }
+  }
+}
