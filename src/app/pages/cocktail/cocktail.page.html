@@ -15,7 +15,7 @@
   <button (click)="toggleView(false)" [class.active]="!isGridView">☰</button>
 </div>
 
-<div *ngIf="cocktails.length === 0 && searchActive && showFilters" class="no-results">
+<div *ngIf="cocktails.length === 0 && searchActive && showFilters && !isLoading" class="no-results">
   <p>No se encontraron cócteles para la busqueda realizada.</p>
 </div>
 
@@ -27,7 +27,11 @@
   [infiniteScrollDistance]="2"
   [infiniteScrollThrottle]="50"
   (scrolled)="onScroll()">
-  @if (showOnlyFavorites) {
+  @if (isLoading) {
+    @for (i of [].constructor(6); track i) {
+      <app-cocktail-skeleton-card></app-cocktail-skeleton-card>
+    }
+  } @else if (showOnlyFavorites) {
     @for (cocktail of (favoriteCocktails$ | async); track cocktail.idDrink) {
       @if (isGridView) {
         <app-cocktail-card [cocktail]="cocktail"></app-cocktail-card>

@@ -7,6 +7,7 @@ import { CocktailModel } from '../../core/models/cocktail.model';
 import { CocktailService } from '../../core/services/cocktail/cocktail.service';
 import { CocktailCardComponent } from '../../components/cocktail-card/cocktail-card.component';
 import { CocktailListItemComponent } from '../../components/cocktail-list-item/cocktail-list-item.component';
+import { CocktailSkeletonCardComponent } from '../../components/cocktail-skeleton-card/cocktail-skeleton-card.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { FavoritesProvider } from '../../core/providers/favorite/favorite.provider';
 import { Observable, of, Subject } from 'rxjs';
@@ -21,6 +22,7 @@ import { SearchBarComponent, SearchType } from '../../components/search-bar/sear
     CommonModule,
     CocktailCardComponent,
     CocktailListItemComponent,
+    CocktailSkeletonCardComponent, // Added here
     InfiniteScrollModule,
     HeaderComponent,
     SearchBarComponent,
@@ -41,6 +43,7 @@ export class CocktailPage implements OnInit, OnDestroy {
   isGridView = true;
   searchActive = false;
   showFilters = false;
+  isLoading = true;
 
   private currentLetter = 'a';
   private ngUnsubscribe = new Subject<void>();
@@ -50,6 +53,7 @@ export class CocktailPage implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.ngUnsubscribe),
         switchMap(params => {
+          this.isLoading = true;
           const searchTerm = params['q'];
           const searchType: SearchType = params['type'] || 'name';
           this.searchActive = !!searchTerm;
@@ -68,6 +72,7 @@ export class CocktailPage implements OnInit, OnDestroy {
           } else {
             if (this.initialCocktails.length > 0) {
               this.cocktails = this.initialCocktails;
+              this.isLoading = false;
             } else {
               this.cocktails = [];
               this.currentLetter = 'a';
@@ -79,6 +84,7 @@ export class CocktailPage implements OnInit, OnDestroy {
       )
       .subscribe(response => {
         if (response) this.cocktails = response.drinks || [];
+        this.isLoading = false;
       });
   }
 
@@ -88,6 +94,7 @@ export class CocktailPage implements OnInit, OnDestroy {
   }
 
   loadCocktails() {
+    this.isLoading = true;
     this.cocktailService.listCocktailsByFirstLetter(this.currentLetter).then(response => {
       if (response.drinks) {
         this.cocktails = [...this.cocktails, ...response.drinks];
@@ -95,6 +102,7 @@ export class CocktailPage implements OnInit, OnDestroy {
           this.initialCocktails = [...this.initialCocktails, ...response.drinks];
         }
       }
+      this.isLoading = false;
     });
   }
 
