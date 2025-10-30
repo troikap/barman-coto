@@ -16,7 +16,7 @@
         <button (click)="toggleFavorite()">
           {{ (isFavorite$ | async) ? 'Remover favorito' : 'Añadir favorito' }}
         </button>
-        <button>Ver detalle</button>
+        <button (click)="viewDetails()">Ver detalle</button>
       </div>
     }
   </div>
