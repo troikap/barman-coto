@@ -1,0 +1,8 @@
+<header class="header">
+  <h1 class="header-title">Cócteles</h1>
+  <div class="header-actions">
+    <button class="header-button" [class.active]="!showOnlyFavorites && !showFilters" (click)="onShowAll()">Ver todos</button>
+    <button class="header-button" [class.active]="showOnlyFavorites && !showFilters" (click)="onShowFavorites()">Ver favoritos</button>
+    <button class="header-button" [class.active]="showFilters" (click)="onShowFilters()">Ver con filtros</button>
+  </div>
+</header>

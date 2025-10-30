@@ -1,0 +1,39 @@
+
+<div class="search-bar-container">
+  <div class="search-type-selector">
+    <label>
+      <input type="radio" [formControl]="searchTypeControl" value="name"> Nombre
+    </label>
+    <label>
+      <input type="radio" [formControl]="searchTypeControl" value="ingredient"> Ingrediente
+    </label>
+    <label>
+      <input type="radio" [formControl]="searchTypeControl" value="id"> Id
+    </label>
+  </div>
+
+  <input type="text" [formControl]="searchControl" [placeholder]="placeholderText" [class.is-invalid]="searchControl.invalid && (searchControl.dirty || searchControl.touched)">
+  @if (searchControl.invalid && (searchControl.dirty || searchControl.touched)) {
+    <div class="error-message">
+      @if (searchControl.errors?.['maxlength']) {
+        El texto es demasiado largo (máximo 50 caracteres).
+      }
+      @if (searchControl.errors?.['pattern']) {
+        @if (searchTypeControl.value === 'id') {
+          Solo se permiten números.
+        } @else {
+          Solo se permiten letras y espacios.
+        }
+      }
+    </div>
+  }
+
+  @if (searchTypeControl.value === 'ingredient' && filteredIngredients.length > 0 && searchControl.value) {
+    <ul class="ingredient-list">
+      @for (ingredient of filteredIngredients; track ingredient) {
+        <li (click)="onIngredientSelect(ingredient)">{{ ingredient }}</li>
+      }
+    </ul>
+  }
+</div>
+
