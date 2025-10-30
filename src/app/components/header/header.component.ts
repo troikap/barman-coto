@@ -10,8 +10,10 @@ import { CommonModule } from '@angular/common';
 })
 export class HeaderComponent {
   @Input() showOnlyFavorites: boolean = false;
+  @Input() showFilters: boolean = false;
   @Output() showAll = new EventEmitter<void>();
   @Output() showFavorites = new EventEmitter<void>();
+  @Output() showFiltersChange = new EventEmitter<void>();
 
   onShowAll() {
     this.showAll.emit();
@@ -19,5 +21,9 @@ export class HeaderComponent {
 
   onShowFavorites() {
     this.showFavorites.emit();
+  }
+
+  onShowFilters() {
+    this.showFiltersChange.emit();
   }
 }
