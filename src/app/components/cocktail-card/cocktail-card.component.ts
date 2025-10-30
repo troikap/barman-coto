@@ -1,4 +1,4 @@
-import { Component, Input, inject, OnInit } from '@angular/core';
+import { Component, Input, inject, OnInit, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CocktailModel } from '../../core/models/cocktail.model';
 import { FavoritesProvider } from '../../core/providers/favorite/favorite.provider';
@@ -16,7 +16,9 @@ import { IngredientsListComponent } from '../ingredients-list/ingredients-list.c
 export class CocktailCardComponent implements OnInit {
   @Input() cocktail: CocktailModel | null = null;
   private favoritesProvider = inject(FavoritesProvider);
+  private elementRef = inject(ElementRef);
   isFavorite$: Observable<boolean> = new Observable<boolean>();
+  showMenu: boolean = false;
 
   ngOnInit() {
     if (this.cocktail) {
@@ -28,5 +30,14 @@ export class CocktailCardComponent implements OnInit {
 
   toggleFavorite() {
     if (this.cocktail) this.favoritesProvider.toggleFavorite(this.cocktail);
+    this.showMenu = false;
+  }
+
+  toggleMenu() {
+    this.showMenu = !this.showMenu;
+  }
+
+  @HostListener('document:click', ['$event']) onDocumentClick(event: MouseEvent) {
+    if (!this.elementRef.nativeElement.contains(event.target)) this.showMenu = false;
   }
 }

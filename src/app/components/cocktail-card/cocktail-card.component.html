@@ -1,6 +1,6 @@
 @if (cocktail) {
-  <div class="cocktail-card">
-    <div class="favorite-icon" (click)="toggleFavorite()">
+  <div class="cocktail-card" (click)="toggleMenu()">
+    <div class="favorite-icon" (click)="toggleFavorite(); $event.stopPropagation()">
       <span [class.favorite]="isFavorite$ | async">★</span>
     </div>
     <img [src]="cocktail.strDrinkThumb" [alt]="cocktail.strDrink">
@@ -10,5 +10,14 @@
         <app-ingredients-list [cocktail]="cocktail"></app-ingredients-list>
       </div>
     </div>
+
+    @if (showMenu) {
+      <div class="cocktail-menu" (click)="$event.stopPropagation()">
+        <button (click)="toggleFavorite()">
+          {{ (isFavorite$ | async) ? 'Remover favorito' : 'Añadir favorito' }}
+        </button>
+        <button>Ver detalle</button>
+      </div>
+    }
   </div>
 }
