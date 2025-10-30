@@ -6,14 +6,12 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   cursor: pointer;
   background-color: #ffffff;
-
   .cocktail-card {
     img {
       width: 100%;
       height: auto;
       transition: transform 0.3s ease;
     }
-
     .cocktail-card-info {
       position: absolute;
       bottom: 0;
@@ -24,27 +22,22 @@
       padding: 16px;
       transform: translateY(100%);
       transition: transform 0.3s ease;
-
       h3 {
         margin: 0;
         font-size: 1.5rem;
       }
-
       .ingredients {
         margin-top: 10px;
       }
     }
-
     &:hover {
       img {
         transform: scale(1.1);
       }
-
       .cocktail-card-info {
         transform: translateY(0);
       }
     }
-
     .favorite-icon {
       position: absolute;
       top: 10px;
@@ -53,15 +46,39 @@
       color: white;
       font-size: 24px;
       cursor: pointer;
-
       span {
         color: white;
         text-shadow: 0 0 5px white, 0 0 5px white, 0 0 5px white, 0 0 5px white;
       }
-
       span.favorite {
         color: yellow;
         text-shadow: 0 0 5px black, 0 0 5px black, 0 0 5px black, 0 0 5px black;
+      }
+    }
+    .cocktail-menu {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      button {
+        background-color: #fff;
+        color: #000;
+        border: none;
+        padding: 10px 20px;
+        margin: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        &:hover {
+          background-color: #eee;
+        }
       }
     }
   }
