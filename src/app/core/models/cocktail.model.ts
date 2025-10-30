@@ -55,8 +55,3 @@ export interface CocktailModel {
   strCreativeCommonsConfirmed: string;
   dateModified: string;
 }
-
-export interface IngredientModel {
-  name: string;
-  measure: string;
-}

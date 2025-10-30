@@ -1,19 +1,29 @@
 <app-header
   [showOnlyFavorites]="showOnlyFavorites"
+  [showFilters]="showFilters"
   (showAll)="toggleShowFavorites(false)"
   (showFavorites)="toggleShowFavorites(true)"
+  (showFiltersChange)="toggleShowFilters(true)"
 ></app-header>
+
+@if (showFilters) {
+  <app-search-bar (search)="onSearch($event)"></app-search-bar>
+}
 
 <div class="view-toggle">
   <button (click)="toggleView(true)" [class.active]="isGridView">▦</button>
   <button (click)="toggleView(false)" [class.active]="!isGridView">☰</button>
 </div>
 
+<div *ngIf="cocktails.length === 0 && searchActive && showFilters" class="no-results">
+  <p>No se encontraron cócteles para la busqueda realizada.</p>
+</div>
+
 <div
   [class.cocktail-list]="isGridView"
   [class.cocktail-list-view]="!isGridView"
   infinite-scroll
-  [infiniteScrollDisabled]="showOnlyFavorites"
+  [infiniteScrollDisabled]="showOnlyFavorites || showFilters"
   [infiniteScrollDistance]="2"
   [infiniteScrollThrottle]="50"
   (scrolled)="onScroll()">
