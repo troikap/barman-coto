@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IngredientsListComponent } from '../ingredients-list/ingredients-list.component';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cocktail-list-item',
@@ -17,6 +18,7 @@ import { environment } from '../../../environments/environment';
 export class CocktailListItemComponent implements OnInit {
   @Input() cocktail: CocktailModel | null = null;
   private favoritesProvider = inject(FavoritesProvider);
+  private router = inject(Router);
   isFavorite$: Observable<boolean> = new Observable<boolean>();
   smallImageUrl: string = '';
 
@@ -35,5 +37,9 @@ export class CocktailListItemComponent implements OnInit {
 
   toggleFavorite() {
     if (this.cocktail) this.favoritesProvider.toggleFavorite(this.cocktail);
+  }
+
+  viewDetails() {
+    if (this.cocktail) this.router.navigate(['/cocktails', this.cocktail.idDrink]);
   }
 }

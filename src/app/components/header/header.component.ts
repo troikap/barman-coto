@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 export class HeaderComponent {
   @Input() showOnlyFavorites: boolean = false;
   @Input() showFilters: boolean = false;
+  @Input() showActions: boolean = true;
   @Output() showAll = new EventEmitter<void>();
   @Output() showFavorites = new EventEmitter<void>();
   @Output() showFiltersChange = new EventEmitter<void>();
