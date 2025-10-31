@@ -13,7 +13,10 @@
   </div>
 
   <label for="searchInput" class="sr-only">{{ placeholderText }}</label>
-  <input id="searchInput" type="text" [formControl]="searchControl" [placeholder]="placeholderText" [class.is-invalid]="searchControl.invalid && (searchControl.dirty || searchControl.touched)">
+  <input id="searchInput" type="text" [formControl]="searchControl" [placeholder]="placeholderText" [class.is-invalid]="searchControl.invalid && (searchControl.dirty || searchControl.touched)"
+         aria-autocomplete="list"
+         aria-controls="ingredient-suggestions"
+         [attr.aria-expanded]="searchTypeControl.value === 'ingredient' && filteredIngredients.length > 0 && searchControl.value">
   @if (searchControl.invalid && (searchControl.dirty || searchControl.touched)) {
     <div class="error-message">
       @if (searchControl.errors?.['maxlength']) {
@@ -30,9 +33,9 @@
   }
 
   @if (searchTypeControl.value === 'ingredient' && filteredIngredients.length > 0 && searchControl.value) {
-    <ul class="ingredient-list">
+    <ul id="ingredient-suggestions" class="ingredient-list" role="listbox">
       @for (ingredient of filteredIngredients; track ingredient) {
-        <li (click)="onIngredientSelect(ingredient)">{{ ingredient }}</li>
+        <li role="option" tabindex="0" (click)="onIngredientSelect(ingredient)" (keydown.enter)="onIngredientSelect(ingredient)">{{ ingredient }}</li>
       }
     </ul>
   }
