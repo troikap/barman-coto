@@ -16,6 +16,12 @@ export class FavoritesProvider {
   constructor() {
     const storedFavorites = this.storageProvider.getItem<CocktailModel[]>(this.FAVORITES_KEY);
     if (storedFavorites) this.favoritesSubject.next(storedFavorites);
+    window.addEventListener('storage', event => {
+      if (event.key === this.FAVORITES_KEY) {
+        const newFavorites = this.storageProvider.getItem<CocktailModel[]>(this.FAVORITES_KEY);
+        this.favoritesSubject.next(newFavorites || []);
+      }
+    });
   }
 
   isFavorite(cocktail: CocktailModel): boolean {

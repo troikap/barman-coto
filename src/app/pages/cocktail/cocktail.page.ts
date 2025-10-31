@@ -44,11 +44,22 @@ export class CocktailPage implements OnInit, OnDestroy {
   searchActive = false;
   showFilters = false;
   isLoading = true;
+  isLoadingMore = false;
+  initialSearchTerm: string | null = null;
+  initialSearchType: SearchType | null = null;
 
   private currentLetter = 'a';
   private ngUnsubscribe = new Subject<void>();
 
   ngOnInit(): void {
+    if (this.cocktailService.initialCocktailsState) {
+      this.cocktails = this.cocktailService.initialCocktailsState.cocktails;
+      this.initialCocktails = this.cocktailService.initialCocktailsState.cocktails;
+      this.currentLetter = this.cocktailService.initialCocktailsState.currentLetter;
+      this.isLoading = false;
+      this.cocktailService.initialCocktailsState = null;
+      return;
+    }
     this.route.queryParams
       .pipe(
         takeUntil(this.ngUnsubscribe),
@@ -56,6 +67,8 @@ export class CocktailPage implements OnInit, OnDestroy {
           this.isLoading = true;
           const searchTerm = params['q'];
           const searchType: SearchType = params['type'] || 'name';
+          this.initialSearchTerm = searchTerm;
+          this.initialSearchType = searchType;
           this.searchActive = !!searchTerm;
           this.showFilters = !!searchTerm;
           if (searchTerm) {
@@ -70,14 +83,10 @@ export class CocktailPage implements OnInit, OnDestroy {
                 return of(null);
             }
           } else {
-            if (this.initialCocktails.length > 0) {
-              this.cocktails = this.initialCocktails;
-              this.isLoading = false;
-            } else {
-              this.cocktails = [];
-              this.currentLetter = 'a';
-              this.loadCocktails();
-            }
+            this.cocktails = [];
+            this.initialCocktails = [];
+            this.currentLetter = 'a';
+            this.loadCocktails(true);
             return of(null);
           }
         })
@@ -89,12 +98,19 @@ export class CocktailPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (!this.searchActive && !this.showOnlyFavorites) {
+      this.cocktailService.initialCocktailsState = {
+        cocktails: this.initialCocktails,
+        currentLetter: this.currentLetter,
+      };
+    }
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
 
-  loadCocktails() {
-    this.isLoading = true;
+  loadCocktails(isInitialLoad = false) {
+    if (isInitialLoad) this.isLoading = true
+    else this.isLoadingMore = true;
     this.cocktailService.listCocktailsByFirstLetter(this.currentLetter).then(response => {
       if (response.drinks) {
         this.cocktails = [...this.cocktails, ...response.drinks];
@@ -102,24 +118,27 @@ export class CocktailPage implements OnInit, OnDestroy {
           this.initialCocktails = [...this.initialCocktails, ...response.drinks];
         }
       }
-      this.isLoading = false;
+      if (isInitialLoad) this.isLoading = false
+      else this.isLoadingMore = false;
     });
   }
 
   onScroll() {
-    if (!this.showOnlyFavorites && !this.route.snapshot.queryParams['q']) {
+    if (!this.isLoadingMore && !this.showOnlyFavorites && !this.route.snapshot.queryParams['q']) {
       this.currentLetter = String.fromCharCode(this.currentLetter.charCodeAt(0) + 1);
       if (this.currentLetter.charCodeAt(0) <= 'z'.charCodeAt(0)) this.loadCocktails();
     }
   }
 
   toggleShowFavorites(showFavorites: boolean) {
+    this.cocktailService.initialCocktailsState = null;
     this.showOnlyFavorites = showFavorites;
     this.showFilters = false;
     this.router.navigate([], { queryParams: { q: null, type: null }, queryParamsHandling: 'merge' });
   }
 
   toggleShowFilters(show: boolean) {
+    this.cocktailService.initialCocktailsState = null;
     this.showOnlyFavorites = false;
     this.showFilters = show;
     if (!show) {
@@ -134,6 +153,7 @@ export class CocktailPage implements OnInit, OnDestroy {
   }
 
   onSearch(searchData: { term: string; type: SearchType }) {
+    this.cocktailService.initialCocktailsState = null;
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { q: searchData.term || null, type: searchData.type || null },

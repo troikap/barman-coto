@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, Output, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, inject, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, filter, withLatestFrom } from 'rxjs/operators';
 import { Subject, startWith } from 'rxjs';
@@ -15,6 +15,8 @@ export type SearchType = 'name' | 'ingredient' | 'id';
   imports: [ReactiveFormsModule],
 })
 export class SearchBarComponent implements OnInit {
+  @Input() initialTerm: string | null = null;
+  @Input() initialType: SearchType | null = null;
   @Output() search = new EventEmitter<{ term: string; type: SearchType }>();
   private ingredientService = inject(IngredientService);
   searchControl = new FormControl('');
@@ -24,6 +26,8 @@ export class SearchBarComponent implements OnInit {
   private searchTerms = new Subject<string>();
 
   ngOnInit(): void {
+    if (this.initialType) this.searchTypeControl.setValue(this.initialType);
+    if (this.initialTerm) this.searchControl.setValue(this.initialTerm);
     const searchTypeChangesWithInitial = this.searchTypeControl.valueChanges.pipe(startWith(this.searchTypeControl.value));
     searchTypeChangesWithInitial.subscribe(type => {
       if (type === null) type = 'name';
