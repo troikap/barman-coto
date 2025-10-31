@@ -12,7 +12,8 @@
     </label>
   </div>
 
-  <input type="text" [formControl]="searchControl" [placeholder]="placeholderText" [class.is-invalid]="searchControl.invalid && (searchControl.dirty || searchControl.touched)">
+  <label for="searchInput" class="sr-only">{{ placeholderText }}</label>
+  <input id="searchInput" type="text" [formControl]="searchControl" [placeholder]="placeholderText" [class.is-invalid]="searchControl.invalid && (searchControl.dirty || searchControl.touched)">
   @if (searchControl.invalid && (searchControl.dirty || searchControl.touched)) {
     <div class="error-message">
       @if (searchControl.errors?.['maxlength']) {

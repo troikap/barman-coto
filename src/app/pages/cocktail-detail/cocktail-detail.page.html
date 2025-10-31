@@ -1,13 +1,13 @@
 <app-header [showActions]="false" (showAll)="goBack()"></app-header>
 
-<div class="cocktail-detail-container">
+<div class="cocktail-detail-container" role="main" aria-labelledby="cocktail-name-heading">
   @if (isLoading) {
-    <div class="loading-spinner">Cargando...</div>
+    <div class="loading-spinner" role="status" aria-live="polite">Cargando...</div>
   } @else if (cocktail) {
-    <div class="cocktail-card">
+    <div class="cocktail-card" tabindex="0">
       <img [src]="cocktail.strDrinkThumb" alt="{{ cocktail.strDrink }}" class="cocktail-image" />
       <div class="cocktail-info">
-        <h1 class="cocktail-name">{{ cocktail.strDrink }}</h1>
+        <h1 id="cocktail-name-heading" class="cocktail-name" tabindex="-1">{{ cocktail.strDrink }}</h1>
         <p class="cocktail-category">{{ cocktail.strCategory }} - {{ cocktail.strAlcoholic }}</p>
 
         <h2 class="section-title">Ingredientes:</h2>

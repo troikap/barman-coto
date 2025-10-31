@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { CocktailService } from '../../core/services/cocktail/cocktail.service';
@@ -46,6 +46,10 @@ export class CocktailDetailPage implements OnInit, OnDestroy {
           this.cocktail = undefined;
         }
         this.isLoading = false;
+        setTimeout(() => {
+          const heading = document.getElementById('cocktail-name-heading');
+          heading?.focus();
+        }, 0);
       },
       error => {
         console.error('Error loading cocktail details:', error);
