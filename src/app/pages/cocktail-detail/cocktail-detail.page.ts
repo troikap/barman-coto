@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule, Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { CocktailService } from '../../core/services/cocktail/cocktail.service';
 import { CocktailModel } from '../../core/models/cocktail.model';
 import { Subject } from 'rxjs';
@@ -18,7 +18,7 @@ import { IngredientsListComponent } from '../../components/ingredients-list/ingr
 export class CocktailDetailPage implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private cocktailService = inject(CocktailService);
-  private router = inject(Router);
+  private location = inject(Location);
   cocktail: CocktailModel | undefined;
   isLoading = true;
   private ngUnsubscribe = new Subject<void>();
@@ -26,11 +26,8 @@ export class CocktailDetailPage implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
       const id = params.get('id');
-      if (id) {
-        this.loadCocktailDetails(id);
-      } else {
-        this.router.navigate(['/cocktails']);
-      }
+      if (id) this.loadCocktailDetails(id)
+      else this.goBack();
     });
   }
 
@@ -59,6 +56,7 @@ export class CocktailDetailPage implements OnInit, OnDestroy {
   }
 
   goBack(): void {
-    this.router.navigate(['/cocktails']);
+    this.location.back();
   }
 }
+

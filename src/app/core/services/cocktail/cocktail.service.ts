@@ -4,7 +4,7 @@ import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { lastValueFrom, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DrinksModel } from '../../models/cocktail.model';
+import { DrinksModel, CocktailModel } from '../../models/cocktail.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,9 @@ export class CocktailService {
   private http = inject(HttpClient);
   private readonly apiDB = environment.apiUrl;
   private readonly versionUrl = environment.versionUrl;
+
+  // Cache for X-Y
+  public initialCocktailsState: { cocktails: CocktailModel[], currentLetter: string } | null = null;
 
   // Search cocktail by name
   async searchCocktailByName(name: string): Promise<DrinksModel> {
