@@ -14,7 +14,10 @@ export class CocktailService {
   private readonly apiDB = environment.apiUrl;
   private readonly versionUrl = environment.versionUrl;
 
-  // Cache for X-Y
+  /**
+   * Cache for the initial list of cocktails and the letter used to fetch them.
+   * This is used to restore the state when navigating back to the cocktail list page.
+   */
   public initialCocktailsState: { cocktails: CocktailModel[], currentLetter: string } | null = null;
 
   // Search cocktail by name

@@ -29,6 +29,8 @@ export class SearchBarComponent implements OnInit {
     if (this.initialType) this.searchTypeControl.setValue(this.initialType);
     const searchTypeChangesWithInitial = this.searchTypeControl.valueChanges.pipe(startWith(this.searchTypeControl.value));
     if (this.initialTerm) this.searchControl.setValue(this.initialTerm);
+
+    // Subscribe to search type changes to update validators and load ingredients
     searchTypeChangesWithInitial.subscribe(type => {
       if (type === null) type = 'name';
       this.updateValidators(type);
@@ -41,6 +43,8 @@ export class SearchBarComponent implements OnInit {
         this.search.emit({ term: this.searchControl.value, type });
       }
     });
+
+    // Debounce search input to avoid excessive API calls
     this.searchTerms.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -50,6 +54,8 @@ export class SearchBarComponent implements OnInit {
       if (type === null) type = 'name';
       if (this.searchControl.valid) this.search.emit({ term, type });
     });
+
+    // Filter ingredients as the user types
     this.searchControl.valueChanges.subscribe((term: any) => {
       this.searchTerms.next(term || '');
       if (this.searchTypeControl.value === 'ingredient') {
@@ -60,6 +66,10 @@ export class SearchBarComponent implements OnInit {
     });
   }
 
+  /**
+   * Updates the validators for the search control based on the selected search type.
+   * @param type The selected search type.
+   */
   private updateValidators(type: SearchType): void {
     if (type === 'name' || type === 'ingredient') {
       this.searchControl.setValidators([Validators.maxLength(50), Validators.pattern('^[a-zA-Z ]*$')]);
@@ -69,6 +79,10 @@ export class SearchBarComponent implements OnInit {
     this.searchControl.updateValueAndValidity();
   }
 
+  /**
+   * Emits a search event when an ingredient is selected from the list.
+   * @param ingredient The selected ingredient.
+   */
   onIngredientSelect(ingredient: string): void {
     this.searchControl.setValue(ingredient);
     this.search.emit({ term: ingredient, type: 'ingredient' });
