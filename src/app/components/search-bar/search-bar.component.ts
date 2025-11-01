@@ -27,12 +27,11 @@ export class SearchBarComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.initialType) this.searchTypeControl.setValue(this.initialType);
-    if (this.initialTerm) this.searchControl.setValue(this.initialTerm);
     const searchTypeChangesWithInitial = this.searchTypeControl.valueChanges.pipe(startWith(this.searchTypeControl.value));
+    if (this.initialTerm) this.searchControl.setValue(this.initialTerm);
     searchTypeChangesWithInitial.subscribe(type => {
       if (type === null) type = 'name';
       this.updateValidators(type);
-      this.searchControl.setValue('');
       if (type === 'ingredient' && this.ingredients.length === 0) {
         this.ingredientService.listIngredientsObservable().subscribe(response => {
           this.ingredients = response.drinks.map(d => d.strIngredient1);

@@ -27,7 +27,6 @@ export class CocktailListItemComponent implements OnInit {
       this.isFavorite$ = this.favoritesProvider.favorites$.pipe(
         map(favorites => favorites.some(fav => fav.idDrink === this.cocktail!.idDrink))
       );
-      // Construir la URL de la imagen pequeña directamente
       const thumbUrl = this.cocktail.strDrinkThumb;
       const fileNameWithExtension = thumbUrl.substring(thumbUrl.lastIndexOf('/') + 1);
       const fileName = fileNameWithExtension.split('.')[0];
