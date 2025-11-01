@@ -24,6 +24,7 @@ export class CocktailDetailPage implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject<void>();
 
   ngOnInit(): void {
+    // Get the cocktail ID from the route parameters
     this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
       const id = params.get('id');
       if (id) this.loadCocktailDetails(id)
@@ -36,6 +37,10 @@ export class CocktailDetailPage implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
+  /**
+   * Loads the cocktail details from the API.
+   * @param id The ID of the cocktail to load.
+   */
   loadCocktailDetails(id: string): void {
     this.isLoading = true;
     this.cocktailService.lookupCocktailByIdObservable(id).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
@@ -46,6 +51,7 @@ export class CocktailDetailPage implements OnInit, OnDestroy {
           this.cocktail = undefined;
         }
         this.isLoading = false;
+        // Set focus on the heading for accessibility
         setTimeout(() => {
           const heading = document.getElementById('cocktail-name-heading');
           heading?.focus();
@@ -63,4 +69,3 @@ export class CocktailDetailPage implements OnInit, OnDestroy {
     this.location.back();
   }
 }
-

@@ -52,14 +52,17 @@ export class CocktailPage implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject<void>();
 
   ngOnInit(): void {
+    // Restore state if it exists in the service
     if (this.cocktailService.initialCocktailsState) {
       this.cocktails = this.cocktailService.initialCocktailsState.cocktails;
       this.initialCocktails = this.cocktailService.initialCocktailsState.cocktails;
       this.currentLetter = this.cocktailService.initialCocktailsState.currentLetter;
       this.isLoading = false;
-      this.cocktailService.initialCocktailsState = null;
+      this.cocktailService.initialCocktailsState = null; // Clear state after restoring
       return;
     }
+
+    // Subscribe to query params to handle search and filtering
     this.route.queryParams
       .pipe(
         takeUntil(this.ngUnsubscribe),
@@ -71,6 +74,8 @@ export class CocktailPage implements OnInit, OnDestroy {
           this.initialSearchType = searchType;
           this.searchActive = !!searchTerm;
           this.showFilters = !!searchTerm;
+
+          // If there is a search term, perform a search
           if (searchTerm) {
             switch (searchType) {
               case 'name':
@@ -83,6 +88,7 @@ export class CocktailPage implements OnInit, OnDestroy {
                 return of(null);
             }
           } else {
+            // If there is no search term, load the initial list of cocktails
             this.cocktails = [];
             this.initialCocktails = [];
             this.currentLetter = 'a';
@@ -98,16 +104,22 @@ export class CocktailPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // Save the current state to the service if not in search or favorites mode
     if (!this.searchActive && !this.showOnlyFavorites) {
       this.cocktailService.initialCocktailsState = {
         cocktails: this.initialCocktails,
         currentLetter: this.currentLetter,
       };
     }
+    // Unsubscribe from all subscriptions
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
 
+  /**
+   * Loads cocktails from the API based on the current letter.
+   * @param isInitialLoad Whether it is the initial load of cocktails.
+   */
   loadCocktails(isInitialLoad = false) {
     if (isInitialLoad) this.isLoading = true
     else this.isLoadingMore = true;
@@ -123,6 +135,9 @@ export class CocktailPage implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Loads more cocktails when the user scrolls to the bottom of the page.
+   */
   onScroll() {
     if (!this.isLoadingMore && !this.showOnlyFavorites && !this.route.snapshot.queryParams['q']) {
       this.currentLetter = String.fromCharCode(this.currentLetter.charCodeAt(0) + 1);
@@ -130,6 +145,10 @@ export class CocktailPage implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Toggles the view to show only favorite cocktails.
+   * @param showFavorites Whether to show only favorite cocktails.
+   */
   toggleShowFavorites(showFavorites: boolean) {
     this.cocktailService.initialCocktailsState = null;
     this.showOnlyFavorites = showFavorites;
@@ -137,6 +156,10 @@ export class CocktailPage implements OnInit, OnDestroy {
     this.router.navigate([], { queryParams: { q: null, type: null }, queryParamsHandling: 'merge' });
   }
 
+  /**
+   * Toggles the visibility of the search filters.
+   * @param show Whether to show the search filters.
+   */
   toggleShowFilters(show: boolean) {
     this.cocktailService.initialCocktailsState = null;
     this.showOnlyFavorites = false;
@@ -152,6 +175,10 @@ export class CocktailPage implements OnInit, OnDestroy {
     this.isGridView = isGrid;
   }
 
+  /**
+   * Performs a search when the user submits the search form.
+   * @param searchData The search term and type.
+   */
   onSearch(searchData: { term: string; type: SearchType }) {
     this.cocktailService.initialCocktailsState = null;
     this.router.navigate([], {

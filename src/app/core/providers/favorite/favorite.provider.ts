@@ -14,8 +14,11 @@ export class FavoritesProvider {
   private readonly FAVORITES_KEY = 'favorites';
 
   constructor() {
+    // Load favorites from storage on initialization
     const storedFavorites = this.storageProvider.getItem<CocktailModel[]>(this.FAVORITES_KEY);
     if (storedFavorites) this.favoritesSubject.next(storedFavorites);
+
+    // Listen for storage changes from other tabs
     window.addEventListener('storage', event => {
       if (event.key === this.FAVORITES_KEY) {
         const newFavorites = this.storageProvider.getItem<CocktailModel[]>(this.FAVORITES_KEY);
@@ -40,6 +43,11 @@ export class FavoritesProvider {
     this.storageProvider.setItem(this.FAVORITES_KEY, favorites);
   }
 
+  /**
+   * Toggles the favorite status of a cocktail.
+   * If the cocktail is already a favorite, it will be removed. Otherwise, it will be added.
+   * @param cocktail The cocktail to toggle.
+   */
   toggleFavorite(cocktail: CocktailModel): void {
     if (this.isFavorite(cocktail)) this.removeFavorite(cocktail)
     else this.addFavorite(cocktail);
