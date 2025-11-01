@@ -9,10 +9,8 @@
       <div class="cocktail-info">
         <h1 id="cocktail-name-heading" class="cocktail-name" tabindex="-1">{{ cocktail.strDrink }}</h1>
         <p class="cocktail-category">{{ cocktail.strCategory }} - {{ cocktail.strAlcoholic }}</p>
-
         <h2 class="section-title">Ingredientes:</h2>
         <app-ingredients-list [cocktail]="cocktail"></app-ingredients-list>
-
         <h2 class="section-title">Instrucciones:</h2>
         <p class="cocktail-instructions">{{ cocktail.strInstructions }}</p>
       </div>

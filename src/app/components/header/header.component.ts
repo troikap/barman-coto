@@ -16,6 +16,12 @@ export class HeaderComponent {
   @Output() showFavorites = new EventEmitter<void>();
   @Output() showFiltersChange = new EventEmitter<void>();
 
+  isMenuOpen = false;
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
   onShowAll() {
     this.showAll.emit();
   }

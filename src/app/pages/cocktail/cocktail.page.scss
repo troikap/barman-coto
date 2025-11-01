@@ -1,3 +1,6 @@
+.main-content-wrapper {
+  margin-top: 100px;
+}
 .cocktail-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -15,7 +18,7 @@
   justify-content: flex-end;
   margin: 10px 20px;
   button {
-    background-color: #e0e0e0;
+    background-color: white;
     border: none;
     padding: 8px 12px;
     border-radius: 5px;
@@ -23,11 +26,12 @@
     font-size: 0.9rem;
     transition: background-color 0.3s ease;
     margin-left: 5px;
+    color: black;
     &:hover {
-      background-color: #d0d0d0;
+      background-color: #f0f0f0;
     }
     &.active {
-      background-color: #007bff;
+      background-color: #0056b3;
       color: white;
     }
   }

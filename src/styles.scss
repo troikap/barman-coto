@@ -1,5 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
 body {
-  background-color: #f0f0f0;
+  background-color: #1a1a2e; /* Dark background color */
+  background-image: radial-gradient(white, rgba(255, 255, 255, .2) 2px, transparent 40px), radial-gradient(white, rgba(255, 255, 255, .15) 1px, transparent 30px), radial-gradient(white, rgba(255, 255, 255, .1) 2px, transparent 40px);
+  background-size: 550px 550px, 350px 350px, 250px 250px;
+  background-position: 0 0, 40px 60px, 130px 270px;
 }
