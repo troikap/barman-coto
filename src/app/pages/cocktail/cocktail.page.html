@@ -1,0 +1,62 @@
+<app-header
+  [showOnlyFavorites]="showOnlyFavorites"
+  [showFilters]="showFilters"
+  (showAll)="toggleShowFavorites(false)"
+  (showFavorites)="toggleShowFavorites(true)"
+  (showFiltersChange)="toggleShowFilters(true)"
+></app-header>
+
+<div class="main-content-wrapper">
+  @if (showFilters) {
+    <app-search-bar 
+    (search)="onSearch($event)" 
+    [initialTerm]="initialSearchTerm" 
+    [initialType]="initialSearchType"
+    ></app-search-bar>
+  }
+
+  <div class="view-toggle">
+    <button (click)="toggleView(true)" [class.active]="isGridView">▦</button>
+    <button (click)="toggleView(false)" [class.active]="!isGridView">☰</button>
+  </div>
+
+  <div *ngIf="cocktails.length === 0 && searchActive && showFilters && !isLoading" class="no-results">
+    <p>No se encontraron cócteles para la busqueda realizada.</p>
+  </div>
+
+  <div
+    [class.cocktail-list]="isGridView"
+    [class.cocktail-list-view]="!isGridView"
+    infinite-scroll
+    [infiniteScrollDisabled]="showOnlyFavorites || showFilters"
+    [infiniteScrollDistance]="0.4"
+    [infiniteScrollThrottle]="300"
+    (scrolled)="onScroll()">
+    @if (isLoading) {
+      @for (i of [].constructor(6); track i) {
+        <app-cocktail-skeleton-card></app-cocktail-skeleton-card>
+      }
+    } @else if (showOnlyFavorites) {
+      @for (cocktail of (favoriteCocktails$ | async); track cocktail.idDrink) {
+        @if (isGridView) {
+          <app-cocktail-card [cocktail]="cocktail"></app-cocktail-card>
+        } @else {
+          <app-cocktail-list-item [cocktail]="cocktail"></app-cocktail-list-item>
+        }
+      }
+    } @else {
+      @for (cocktail of cocktails; track cocktail.idDrink) {
+        @if (isGridView) {
+          <app-cocktail-card [cocktail]="cocktail"></app-cocktail-card>
+        } @else {
+          <app-cocktail-list-item [cocktail]="cocktail"></app-cocktail-list-item>
+        }
+      }
+      @if (isLoadingMore) {
+        @for (i of [].constructor(3); track i) {
+          <app-cocktail-skeleton-card></app-cocktail-skeleton-card>
+        }
+      }
+    }
+  </div>
+</div>

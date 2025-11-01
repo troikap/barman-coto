@@ -1,0 +1,43 @@
+
+<div class="search-bar-container">
+  <div class="search-type-selector">
+    <label>
+      <input type="radio" [formControl]="searchTypeControl" value="name"> Nombre
+    </label>
+    <label>
+      <input type="radio" [formControl]="searchTypeControl" value="ingredient"> Ingrediente
+    </label>
+    <label>
+      <input type="radio" [formControl]="searchTypeControl" value="id"> Id
+    </label>
+  </div>
+
+  <label for="searchInput" class="sr-only">{{ placeholderText }}</label>
+  <input id="searchInput" type="text" [formControl]="searchControl" [placeholder]="placeholderText" [class.is-invalid]="searchControl.invalid && (searchControl.dirty || searchControl.touched)"
+         aria-autocomplete="list"
+         aria-controls="ingredient-suggestions"
+         [attr.aria-expanded]="searchTypeControl.value === 'ingredient' && filteredIngredients.length > 0 && searchControl.value">
+  @if (searchControl.invalid && (searchControl.dirty || searchControl.touched)) {
+    <div class="error-message">
+      @if (searchControl.errors?.['maxlength']) {
+        El texto es demasiado largo (máximo 50 caracteres).
+      }
+      @if (searchControl.errors?.['pattern']) {
+        @if (searchTypeControl.value === 'id') {
+          Solo se permiten números.
+        } @else {
+          Solo se permiten letras y espacios.
+        }
+      }
+    </div>
+  }
+
+  @if (searchTypeControl.value === 'ingredient' && filteredIngredients.length > 0 && searchControl.value) {
+    <ul id="ingredient-suggestions" class="ingredient-list" role="listbox">
+      @for (ingredient of filteredIngredients; track ingredient) {
+        <li role="option" tabindex="0" (click)="onIngredientSelect(ingredient)" (keydown.enter)="onIngredientSelect(ingredient)">{{ ingredient }}</li>
+      }
+    </ul>
+  }
+</div>
+

@@ -1,0 +1,42 @@
+@if (cocktail) {
+  <div class="cocktail-card"
+       role="button"
+       tabindex="0"
+       (click)="toggleMenu()"
+       (keydown.enter)="toggleMenu()"
+       (keydown.space)="toggleMenu()"
+       aria-haspopup="true"
+       [attr.aria-expanded]="showMenu">
+    <button
+      type="button"
+      class="favorite-icon"
+      (click)="toggleFavorite(); $event.stopPropagation()"
+      (keydown.enter)="toggleFavorite(); $event.stopPropagation()"
+      (keydown.space)="toggleFavorite(); $event.stopPropagation()"
+      [attr.aria-label]="(isFavorite$ | async) ? 'Quitar ' + cocktail.strDrink + ' de favoritos' : 'Añadir ' + cocktail.strDrink + ' a favoritos'"
+      [attr.aria-pressed]="isFavorite$ | async">
+      <span aria-hidden="true" [class.favorite]="isFavorite$ | async">★</span>
+    </button>    <img [src]="cocktail.strDrinkThumb" [alt]="cocktail.strDrink">
+    <div class="cocktail-card-info">
+      <h3>{{ cocktail.strDrink }}</h3>
+      <div class="ingredients">
+        <app-ingredients-list [cocktail]="cocktail"></app-ingredients-list>
+      </div>
+    </div>
+
+    @if (showMenu) {
+      <div class="cocktail-menu"
+           role="menu"
+           (click)="$event.stopPropagation()">
+        <button role="menuitem" (click)="toggleFavorite()"
+            (keydown.enter)="toggleFavorite(); $event.stopPropagation()"
+            (keydown.space)="toggleFavorite(); $event.stopPropagation()">
+          {{ (isFavorite$ | async) ? 'Remover favorito' : 'Añadir favorito' }}
+        </button>
+        <button role="menuitem" (click)="viewDetails()"
+            (keydown.enter)="viewDetails(); $event.stopPropagation()"
+            (keydown.space)="viewDetails(); $event.stopPropagation()">Ver detalle</button>
+      </div>
+    }
+  </div>
+}

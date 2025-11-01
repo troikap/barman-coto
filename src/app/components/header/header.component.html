@@ -1,0 +1,21 @@
+<header class="header">
+  <h1 class="header-title">Cócteles</h1>
+  <button class="menu-icon" (click)="toggleMenu()">
+    <div class="menu-icon-bar"></div>
+    <div class="menu-icon-bar"></div>
+    <div class="menu-icon-bar"></div>
+  </button>
+  <div class="menu-container" [class.show]="isMenuOpen">
+    @if (showActions) {
+      <div class="header-actions">
+        <button class="header-button" [class.active]="!showOnlyFavorites && !showFilters" (click)="onShowAll()">Ver todos</button>
+        <button class="header-button" [class.active]="showOnlyFavorites && !showFilters" (click)="onShowFavorites()">Ver favoritos</button>
+        <button class="header-button" [class.active]="showFilters" (click)="onShowFilters()">Ver con filtros</button>
+      </div>
+    } @else {
+      <div class="header-actions">
+        <button class="header-button" (click)="onShowAll()">Ver todos</button>
+      </div>
+    }
+  </div>
+</header>
